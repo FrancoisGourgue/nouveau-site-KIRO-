@@ -11,3 +11,13 @@ To do that, we are giving description of tasks and we address to each a mark of 
 | User type     | Action description   | Priority |
 | ------------- |:---------------------| :-------:|
 | Professor 👨‍🏫    | Login (email + pswd) |   🚩    |
+| Professor 👨‍🏫    | Create subject      |   🚩🚩    |
+| Professor 👨‍🏫    | See online students  |   🚩🚩    |
+| Professor 👨‍🏫    | See team results  |   🚩🚩🚩    |
+| Professor 👨‍🏫    | See team rank  |   🚩🚩🚩    |
+| Student 👨‍🎓      | Create team    |   🚩🚩🚩    |
+| Student 👨‍🎓      | Login (user_name + pswd)    |   🚩🚩🚩    |
+| Student 👨‍🎓      | See subject |   🚩🚩🚩🚩    |
+| Student 👨‍🎓      | Upload a solution |   🚩🚩🚩🚩    |
+| Student 👨‍🎓      | Submit a solution   |   🚩🚩🚩    |
+| Student 👨‍🎓      | See one's rank  |   🚩🚩🚩    |
