@@ -7,7 +7,7 @@ class Team(models.Model):
         KIRO = "Participant Kiro",
         RO = "Cours de RO"
 
-    name = models.CharField()
+    name = models.CharField(max_length=100)
     score = models.IntegerField()
 
 class Solution(models.Model):
@@ -40,9 +40,9 @@ class User(AbstractUser):
     password = models.CharField(blank=False, max_length=255)
     first_name = models.CharField(blank=False, max_length=255)
     last_name = models.CharField(blank = False, max_length=255)
-    school = models.CharField(choices = School.choices, default=School.OTHER)
-    role = models.CharField(choices = Role.choices, default=Role.COMPETITOR)
-    gender = models.CharField(choices = Gender.choices, default=Gender.OTHER)
+    school = models.CharField(max_length=255, choices = School.choices, default=School.OTHER)
+    role = models.CharField(max_length=255, choices = Role.choices, default=Role.COMPETITOR)
+    gender = models.CharField(max_length=255, choices = Gender.choices, default=Gender.OTHER)
 
 class Student(User):
     role = User.Role.STUDENT
