@@ -11,8 +11,9 @@ class User(AbstractUser):
         CS = "Centrale Supélec",
         X = "École polytechnique"
         ENPC = "École des Ponts",
-        ENPC1A = "École des Ponts 1A"
-    
+        ENSAE = "ENSAE",    
+        HEC = "HEC",
+        ENS = "ENS"
     class Gender(models.TextChoices):
         MALE = "Homme",
         FEMALE = "Femme",
@@ -54,3 +55,7 @@ class Student(User):
 
 class Teacher(User):
     role = User.Role.TEACHER
+
+class Invitation(models.Model):
+    team = models.ForeignKey(Team, on_delete=models.PROTECT)
+    student = models.CharField(max_length=255)

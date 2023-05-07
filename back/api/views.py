@@ -4,7 +4,8 @@ import datetime
 from django.shortcuts import render
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import AuthenticationFailed
 from api.serializer import (
     UserSerializer, TeamSerializer, StudentSerializer, TeacherSerializer
@@ -67,6 +68,31 @@ def getRoutes(request):
                 "student": "<student's email address>",
             },
         },
+        {
+            "Endpoint": "/team/getscore",
+            "method": "GET",
+            "description": "Get team's score",
+            "Format of the request:": {
+                "team": "<team name>",
+            },
+        },
+        {
+            "Endpoint": "/team/getscoreupdates",
+            "method": "GET",
+            "description": "Get team's score updates",
+            "Format of the request:": {
+                "team": "<team name>",
+            },
+        },
+        {
+            "Endpoint": "/team/invite",
+            "method": "POST",
+            "description": "Create an invitation",
+            "Format of the request:": {
+                "team": "<team name>",
+                "student": "<student's email address>",
+            },
+        }
     ]
     return Response(routes)
 
@@ -123,6 +149,7 @@ def registerTeam(request):
 
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def addStudentToTeam(request):
     try:
         team = Team.objects.get(name = request.data['team'])
