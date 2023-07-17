@@ -5,15 +5,6 @@ class User(AbstractUser):
     class Role(models.TextChoices):
         TEACHER = "Professeur",
         STUDENT = "Étudiant",
-
-    class School(models.TextChoices):
-        OTHER = "Autre",
-        CS = "Centrale Supélec",
-        X = "École polytechnique"
-        ENPC = "École des Ponts",
-        ENSAE = "ENSAE",    
-        HEC = "HEC",
-        ENS = "ENS"
     class Gender(models.TextChoices):
         MALE = "Homme",
         FEMALE = "Femme",
@@ -25,6 +16,7 @@ class User(AbstractUser):
     last_name = models.CharField(blank = False, max_length=255)
     role = models.CharField(max_length=255, choices = Role.choices, default=Role.STUDENT)
     gender = models.CharField(max_length=255, choices = Gender.choices, default=Gender.OTHER)
+    phone_number = models.TextField(max_length=12, default="0000000000")
 
 class Team(models.Model):
     class Type(models.TextChoices):
@@ -49,9 +41,10 @@ class Solution(models.Model):
     team = models.ForeignKey(Team, on_delete=models.PROTECT)
 
 class Student(User):
-    team = models.ForeignKey(Team, on_delete=models.PROTECT)
+    team = models.ForeignKey(Team, on_delete=models.PROTECT, default=None, null=True)
     role = User.Role.STUDENT
-    school = models.CharField(max_length=255, choices = User.School.choices, default=User.School.OTHER)
+    school = models.TextField(max_length=255)
+    school_year = models.TextField(max_length=7, default="BAC+1")
 
 class Teacher(User):
     role = User.Role.TEACHER
