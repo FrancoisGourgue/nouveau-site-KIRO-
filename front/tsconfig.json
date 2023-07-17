@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+        "baseUrl": "./src",
+        "outDir": "/src/back/static/react/",
+        "allowJs": true,
+        "allowSyntheticDefaultImports": true,
+        "isolatedModules": true,
+        "esModuleInterop": true,
+        "types": [
+            "node"
+        ],
+    },
+    "include": ["./src/**/*"]
+  }
