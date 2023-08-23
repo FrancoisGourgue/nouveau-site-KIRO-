@@ -2,31 +2,26 @@
 <!--Header-->
 <!--Body-->
 <body>
-    <!--Login Card-->
-    <div class="login-content">
-        <div class="login-card">
-            <div class="row h-100">
-                <!--Login Card Right Side-->
-                <div class="col-sm-7 white-border" style="padding: 1rem;">
-                    <!--Login Form-->
-                    <form class="login-card-form" method="post" action="/login/">
-                        {% csrf_token %}
-                        <h1 class="login-title">Connecte-toi !</h1>
-                        <!--Login Inputs-->
-                        <input type="email" class="login-input" placeholder="prenom.nom@eleves.enpc.fr" name="username" value='{{form.username.value|default_if_none:""}}' required>
-                        <input type="password" class="login-input" placeholder="mot de passe" name="password" required>
-                        <!--Login Links-->
-                        <a class="link" href="">Mot de passe oublié</a>
-                        <!--Login Errors-->
-                        {% if form.errors %}
-                            <p class="login-errors">Mauvais identifiants</p>
-                        {% endif %}
-                        <!--Submit Button-->
-                        <button type="submit" class="button blue-button">Se connecter</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-</body>
-</html>
+    <!--Header-->
+    {% include "header.html" %}
+    
+    <!--Content-->
+    <div class="content">
+
+        <!--Main Content-->
+        <div class="content-main">
+
+            <div id="Basic"></div>
+
+        </div><!--End of Main Content-->
+
+    </div><!--End of Content-->
+
+    <script>
+        window.react_mount = document.getElementById('Basic');
+    </script>
+    <script src="{% static 'react/login.bundle.js' %}"></script>
+
+</body><!--End of Body-->
+
+</html><!--End of Document-->

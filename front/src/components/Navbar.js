@@ -1,5 +1,4 @@
-import {useState} from 'react';
-import { NavLink } from 'react-router-dom';
+import React, {useState, useEffect, useRef} from 'react';
 import '../css/style.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
