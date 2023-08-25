@@ -18,6 +18,7 @@ FROM node_base as development
 COPY  ./install-frontend-dev.sh /usr/local/bin/
 RUN sed -i 's/\r$//g' /usr/local/bin/install-frontend-dev.sh \
     && chmod +x /usr/local/bin/install-frontend-dev.sh
+    
 USER node
 
 CMD ["/usr/local/bin/install-frontend-dev.sh"]

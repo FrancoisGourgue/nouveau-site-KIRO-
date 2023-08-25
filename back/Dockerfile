@@ -63,14 +63,12 @@ COPY --from=builder-base $PYSETUP_PATH $PYSETUP_PATH
 # quicker install as runtime deps are already installed
 RUN poetry install
 WORKDIR /src
-RUN mkdir -p /src/back/static/react \
-    && chmod 777 /src/back/static/react
-COPY . .
 
 # installation of netcat to check if db is up
 RUN apt-get update \
     && apt-get install --no-install-recommends -y \
     netcat=1.10-46 \
+    redis=5:6.0.16-1+deb11u2 \
     && rm -rf /var/lib/apt/lists/*
 
 COPY ./entrypoint-dev.sh /usr/local/bin/
@@ -91,14 +89,14 @@ COPY --from=builder-base $PYSETUP_PATH $PYSETUP_PATH
 # quicker install as runtime deps are already installed
 RUN poetry install
 WORKDIR /src
-RUN mkdir -p /src/back/static/react \
-    && chmod 777 /src/back/static/react
+
 COPY . .
 
 # installation of netcat to check if db is up
 RUN apt-get update \
     && apt-get install --no-install-recommends -y \
     netcat=1.10-46 \
+    redis=5:6.0.16-1+deb11u2 \
     && rm -rf /var/lib/apt/lists/*
 
 RUN sed -i 's/\r$//g' /src/entrypoint-prod.sh \
