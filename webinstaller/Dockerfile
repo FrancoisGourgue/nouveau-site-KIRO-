@@ -12,8 +12,6 @@ RUN sed -i 's/\r$//g' /usr/local/bin/install-frontend-dev.sh \
     && chmod +x /usr/local/bin/install-frontend-dev.sh
 RUN npm config set unsafe-perm true
 
-USER node
-
 CMD ["/usr/local/bin/install-frontend-dev.sh"]
 
 
@@ -26,8 +24,6 @@ RUN chown node .babelrc package-lock.json package.json webpack.config.js tsconfi
 COPY ./webinstaller/install-frontend-prod.sh /usr/local/bin/
 RUN sed -i 's/\r$//g' /usr/local/bin/install-frontend-prod.sh \
     && chmod +x /usr/local/bin/install-frontend-prod.sh
-
-USER node
 
 # Supprimer les node_modules potentiellement existants
 RUN rm -rf ./front/node_modules
