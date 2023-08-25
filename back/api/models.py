@@ -23,7 +23,6 @@ class Team(models.Model):
         FIRST_YEAR = "1A Ponts",
         KIRO = "Participant Kiro",
         RO = "Cours de RO"
-
     name = models.CharField(max_length=100, unique=True, blank=False, primary_key=True)
     type = models.CharField(max_length=100, choices=Type.choices, default=Type.KIRO)
     score = models.IntegerField(default=1000)

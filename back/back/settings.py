@@ -32,6 +32,7 @@ AUTH_USER_MODEL = 'api.User'
 
 INSTALLED_APPS = [
     'api',
+    'profile',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

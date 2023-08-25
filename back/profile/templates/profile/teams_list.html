@@ -1,0 +1,9 @@
+{% if teams %}
+    <ul>
+    {% for team in teams %}
+        <li><a href="/teams/{{ team.name }}/">{{ team.name }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>Aucune équipe n'a été créée.</p>
+{% endif %}

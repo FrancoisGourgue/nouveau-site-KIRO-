@@ -1,0 +1,15 @@
+{% load static %}
+<body>
+    {% if student %}
+        <p> Nom: {{student.last_name}}</p>
+        <p> Prénom: {{student.first_name}}</p>
+        <p> E-mail: {{student.email}}</p>
+        <p> Statut: {{student.role}}</p>
+        <p> Numéro de téléphone: {{student.phone_number}}</p>
+        <p> Genre: {{student.gender}}</p>
+        <p> Equipe: {{student.team}}</p>
+        <p> Ecole: {{student.school}}</p>
+        <p> Année d'études: {{student.school_year}}</p>
+        <a href="profile/edit"> Modifier mes données</a>
+    {% endif %}    
+</body>
