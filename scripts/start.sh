@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-docker compose -f docker-compose-prod.yml up -d
+docker compose -f docker-compose-prod.yaml up -d
