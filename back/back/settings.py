@@ -19,13 +19,30 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-!n+di^f5bfctm*4hkjpk4%vx$^i11l8%+5bfq!#7xdz$sf)3-6'
+if os.environ["DEBUG"] == "False":
+    DEBUG = False
+else:
+    DEBUG = True
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+if DEBUG:
+    ALLOWED_HOSTS = [
+        "*",
+    ]
+else:
+    ALLOWED_HOSTS = [os.environ["DOMAIN_NAME"]]
 
-ALLOWED_HOSTS = []
+if DEBUG:
+    # SECURITY WARNING: keep the secret key used in production secret!
+    SECRET_KEY = "oqfhfeho76g<àUIç9fzjeljfzfefhzhfké2~koe~p€~lee"
+else:
+    SECRET_KEY = os.environ["SECRET_KEY"]
+    if os.environ["SECURE_SSL_REDIRECT"] == "False":
+        SECURE_SSL_REDIRECT = False
+    else:
+        SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    CSRF_TRUSTED_ORIGINS = [os.environ["TRUSTED_ORIGIN"]]
 
 # Application definition
 AUTH_USER_MODEL = 'api.User'
@@ -77,9 +94,13 @@ WSGI_APPLICATION = 'back.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "HOST": os.environ["DB_HOST"],
+        "PORT": os.environ["DB_PORT"],
+        "NAME": os.environ["DB_NAME"],
+        "USER": os.environ["DB_USER"],
+        "PASSWORD": os.environ["DB_PASSWORD"],
     }
 }
 
@@ -124,6 +145,7 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'back/static/'),
 ]
+STATIC_ROOT = os.path.join(BASE_DIR, "static/")
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
@@ -138,3 +160,10 @@ AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",
     "back.auth.EmailBackend",
 ]
+
+# Celery settings
+CELERY_BROKER_URL = "redis://localhost:6379"
+CELERY_RESULT_BACKEND = "redis://localhost:6379"
+CELERY_ACCEPT_CONTENT = ["application/json"]
+CELERY_RESULT_SERIALIZER = "json"
+CELERY_TASK_SERIALIZER = "json"

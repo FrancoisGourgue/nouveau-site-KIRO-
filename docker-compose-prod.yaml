@@ -1,0 +1,79 @@
+version: "3.6"
+
+services:
+  db:
+    image: postgres
+    environment:
+      POSTGRES_DB: $DB_NAME
+      POSTGRES_USER: $DB_USER
+      POSTGRES_PASSWORD: $DB_PASSWORD
+    volumes:
+      - ./database:/var/lib/postgresql/data
+      - ./backups:/backups
+    restart: always
+    networks:
+      - db_link
+
+  back:
+    build:
+      context: back
+      dockerfile: Dockerfile
+      target: production
+    command: gunicorn back.wsgi:application --bind 0.0.0.0:8000
+    depends_on:
+      db:
+        condition: service_started
+      webinstaller:
+        condition: service_completed_successfully
+    volumes:
+      - bundles:/src/back/back/static/react
+      - static_volume:/src/back/static/
+      - ./backups:/backups
+    restart: always
+    environment:
+      DB_HOST: $DB_HOST
+      DB_PORT: $DB_PORT
+      DB_NAME: $DB_NAME
+      DB_USER: $DB_USER
+      DB_PASSWORD: $DB_PASSWORD
+      SECRET_KEY: $SECRET_KEY
+      DEBUG: $DEBUG
+      DOMAIN_NAME: $DOMAIN_NAME
+      GUNICORN_NB_WORKERS: $GUNICORN_NB_WORKERS
+      SECURE_SSL_REDIRECT: $SECURE_SSL_REDIRECT
+      TRUSTED_ORIGIN: $TRUSTED_ORIGIN
+    networks:
+      - db_link
+      - nginx_link
+
+  nginx:
+    build: ./nginx
+    ports:
+      - 127.0.0.1:$BACK_PORT:80
+    depends_on:
+      - back
+    volumes:
+      - static_volume:/src/back/static
+    restart: always
+    networks:
+      - nginx_link
+
+  webinstaller:
+    build:
+      context: ./
+      dockerfile: ./webinstaller/Dockerfile
+      target: production
+    volumes:
+      - bundles:/front
+
+volumes:
+  static_volume:
+    driver: local
+  bundles:
+    driver: local
+
+networks:
+  db_link:
+    driver: bridge
+  nginx_link:
+    driver: bridge
