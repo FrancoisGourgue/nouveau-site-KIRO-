@@ -5,6 +5,9 @@ import datetime
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.exceptions import ObjectDoesNotExist
+from django.urls import reverse
+from django.contrib import auth
+from django.contrib.auth import update_session_auth_hash
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
@@ -53,41 +56,56 @@ def profile(request):
     return render(request,"profile/profile.html",context)
 
 
-
 @login_required
 def profile_edit(request):
     email=request.user.email
-    student=get_object_or_404(Student,email=email)
+    student=get_object_or_404(User,email=email)
     context={
-        "student": student,
-    }      
-    """if request.method=='POST':
+        "student": student
+    }
+    if request.method=="POST":
         if "Annuler" in request.POST:
-            return redirect("social:profile")
-        elif "Valider" in request.POST:
-            form=EditProfile(
-                request.POST,
-                request.FILES,
-                instance=Student.objects.get(user=request.user),
-            )
-            if form.is_valid():
-                form.save()
-                return redirect("social:profile")
-        else:
-            form=EditProfile()
-            form.fields["phone_number"].initial=student.phone_number
-            form.fields[]
-        context["EditProfile"]=form"""
-    return render(request, "profile/profile_edit.html", context)
+            return redirect(reverse(profile))
+        student.first_name = request.POST["first_name"]
+        student.last_name = request.POST["last_name"] 
+        student.phone_number = request.POST["phone_number"]
+        student.email = request.POST["email"]    
+        student.save()
+        return redirect(reverse(profile))
+    else:
+        return render(request, "profile/profile_edit.html", context)
 
-
+"""@login_required"""
+def profile_password(request):
+    email=request.user.email
+    student=get_object_or_404(User,email=email)
+    context={
+        "student": student
+    }
+    if request.method=="POST":
+        if "Annuler" in request.POST:
+            return redirect(reverse(profile))
+        if not auth.authenticate(username=email, password=request.POST["old_password"]):
+            context["old_password_error"]=True
+            print("erreur 1")
+            return render(request, "profile/password.html", context)
+        if request.POST["new_password_1"]!=request.POST["new_password_2"]:
+            context["new_password_error"]=True
+            print("erreur 2")
+            return render(request, "profile/password.html", context)
+        student.set_password(request.POST["new_password_1"])
+        student.save()
+        update_session_auth_hash(request, student)
+        return redirect(reverse(profile))
+    else:
+        return render(request, "profile/password.html", context)
+        
 @login_required
 def team(request):
     team_request=get_object_or_404(Team,name=request.user.team.name)
     context={
         "team": team_request,
     }
-    print(request.user.role)
     return render(request,"profile/team.html")
     
     

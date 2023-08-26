@@ -1,3 +1,15 @@
-{% if contexte %}
-    <p> a {{contexte}}</p>
-{% endif %}
+<h1> Modifier mes données </h1>
+<div>
+    <form method="post" action="edit">
+        {% csrf_token %}
+        {%if student %}
+            <input type="text" placeholder="Prénom" value={{student.first_name}} name="first_name" required>
+            <input type="text" placeholder="Nom de famille" value={{student.last_name}} name="last_name" required>
+            <input type="tel" placeholder="Numéro de téléphone" value={{student.phone_number}} name="phone_number" required>
+            <input type="email" placeholder="email" value={{student.email}} name="email" required>
+        {% endif %}
+        <button type="submit" name="Annuler"> Annuler </button> 
+        <button type="submit"> Valider </button>
+    </form>
+    <a href="/profile/profile/edit/password"> Modifier mon mot de passe </a>
+</div>
