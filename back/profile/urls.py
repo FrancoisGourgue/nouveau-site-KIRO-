@@ -1,6 +1,6 @@
 from django.urls import path
 from .views import (
-    team, profile, profile_edit, accueil, leaderboard, teams_list,
+    team, profile, profile_edit, profile_password, accueil, leaderboard, teams_list,
 )
 from api.views import (
     registerStudent,
@@ -26,7 +26,8 @@ team_endpoints = [
 personal_endpoints = [
     path('student/register', registerStudent),
     path('profile', profile),     
-    path('profile/edit', profile_edit),    
+    path('profile/edit', profile_edit),   
+    path('profile/edit/password', profile_password),
 ]
 """path('student/login', loginStudent),""" 
 
