@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
     
 class User(AbstractUser):
+    class Meta:
+        db_table="Users"
     class Role(models.TextChoices):
         TEACHER = "Professeur",
         STUDENT = "Étudiant",
@@ -40,12 +42,16 @@ class Solution(models.Model):
     team = models.ForeignKey(Team, on_delete=models.PROTECT)
 
 class Student(User):
+    class Meta:
+        db_table="Students"
     team = models.ForeignKey(Team, on_delete=models.PROTECT, default=None, null=True)
     role = User.Role.STUDENT
     school = models.TextField(max_length=255)
     school_year = models.TextField(max_length=7, default="BAC+1")
 
 class Teacher(User):
+    class Meta:
+        db_table="Teachers"
     role = User.Role.TEACHER
 
 class Invitation(models.Model):
