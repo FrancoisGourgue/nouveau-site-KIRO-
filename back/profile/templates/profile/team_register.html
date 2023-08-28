@@ -1,0 +1,15 @@
+{% load static %}
+<h1> Je crée mon équipe </h1>
+<div>
+    <form method="post">
+        {% csrf_token %}
+        <input name="name" required>
+        <select name="type">
+            <option value="1A"> 1A </option>
+            <option value="Ponts"> Ponts </option>
+            <option value="Autre"> Autre </option>
+        </select>
+    <button type="submit"> Créer l'équipe </button>
+    <button type="submit" name="Annuler"> Annuler </button>
+    </form> 
+</div>

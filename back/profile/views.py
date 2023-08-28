@@ -28,6 +28,42 @@ def leaderboard(request):
     if request.method == 'GET':
         return render(request, "profile/leaderboard.html")
 
+def register_view(request):
+    if request.method == "POST":
+        #TODO Datavalidation
+        student = Student(
+            username = request.POST["email"], 
+            email = request.POST["email"], 
+            phone_number = request.POST['phone-number'], 
+            first_name = request.POST["first-name"], 
+            last_name = request.POST["last-name"], 
+            school = request.POST["school"], 
+            gender=request.POST["gender"], 
+            school_year = request.POST["year"])
+        student.set_password(request.POST["password"])
+        student.save()
+    else:
+        return render(request, "registration/register.html")
+
+@login_required    
+def team_register(request):
+    email=request.user.email
+    student=get_object_or_404(User, email=email)
+    #TODO empecher student qui a déjà team d'en créer une nouvelle
+    if request.method == "POST":
+        if "Annuler" in request.POST:
+            return redirect(reverse(profile))
+        team = Team(
+            name=request.POST["name"],
+            type=request.POST["type"],
+        )
+        team.save()
+        student.team=team
+        student.save()
+        return redirect(reverse(profile))
+    else:
+        return render(request, "profile/team_register.html")
+
 @login_required
 def teams_list(request):
     teams=Team.objects.order_by("name")
@@ -75,7 +111,7 @@ def profile_edit(request):
     else:
         return render(request, "profile/profile_edit.html", context)
 
-"""@login_required"""
+@login_required
 def profile_password(request):
     email=request.user.email
     student=get_object_or_404(User,email=email)
