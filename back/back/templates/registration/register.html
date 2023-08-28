@@ -2,38 +2,26 @@
 <!--Header-->
 <!--Body-->
 <body>
-    <!--Login Card-->
-    <div class="login-content">
-        <div class="login-card">
-            <div class="row h-100">
-                <!--Login Card Right Side-->
-                <div class="col-sm-7 white-border" style="padding: 1rem;">
-                    <!--Login Form-->
-                    <form class="login-card-form" method="post" action="/register/">
-                        {% csrf_token %}
-                        <h1 class="login-title">Connecte-toi !</h1>
-                        <!--Login Inputs-->
-                        <input type="email" class="login-input" placeholder="Adresse mail" name="email" required>
-                        <input class="login-input" placeholder="Numéro de téléphone" name="phone-number" required>
-                        <input class="login-input" placeholder="Prénom" name="first-name" required>
-                        <input class="login-input" placeholder="Nom" name="last-name" required>
-                        <input class="login-input" placeholder="École" name="school" required>
-                        <input class="login-input" placeholder="Année d'étude (BAC+?)" name="year" required>
-                        <select class="login-input" name="gender">
-                            <option value="Femme">Femme</option>
-                            <option value="Homme">Homme</option>
-                            <option value="Autre">Autre</option>
-                        </select>
-                        <input type="password" class="login-input" placeholder="Mot de passe" name="password" required>
-                        <input type="password" class="login-input" placeholder="Confirmation mot de passe" name="password-confirmation" required>
-                        <!--Login Links-->
-                        <!--Login Errors-->
-                        <!--Submit Button-->
-                        <button type="submit" class="button blue-button">Se connecter</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-</body>
-</html>
+    <!--Header-->
+    {% include "header.html" %}
+    
+    <!--Content-->
+    <div class="content">
+
+        <!--Main Content-->
+        <div class="content-main">
+
+            <div id="Basic"></div>
+
+        </div><!--End of Main Content-->
+
+    </div><!--End of Content-->
+    
+    <script>
+        window.react_mount = document.getElementById('Basic');
+    </script>
+    <script src="{% static 'react/register.bundle.js' %}"></script>
+
+</body><!--End of Body-->
+
+</html><!--End of Document-->
