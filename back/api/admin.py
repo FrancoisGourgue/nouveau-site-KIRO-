@@ -1,5 +1,6 @@
 from django.contrib import admin
 from api.models import User, Team, Student, Teacher
+
 # Register your models here.
 
 admin.site.register(User)

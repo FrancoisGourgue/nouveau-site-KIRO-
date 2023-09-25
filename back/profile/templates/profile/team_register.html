@@ -3,8 +3,10 @@
 <div>
     <form method="post">
         {% csrf_token %}
-        <input name="name" required>
-        <select name="type">
+        {% if student %}
+            <input name="name" placeholder="Nom d'équipe">
+        {% endif %}
+        <select name="type" placeholder="Autre">
             <option value="1A"> 1A </option>
             <option value="Ponts"> Ponts </option>
             <option value="Autre"> Autre </option>

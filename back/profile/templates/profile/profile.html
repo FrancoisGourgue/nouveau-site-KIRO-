@@ -7,10 +7,11 @@
         <p> Statut: {{student.role}}</p>
         <p> Numéro de téléphone: {{student.phone_number}}</p>
         <p> Genre: {{student.gender}}</p>
-        <p> Equipe: {{student.team}}</p>
+        <p> Equipe: {{student.team.name}}</p>
         <p> Ecole: {{student.school}}</p>
         <p> Année d'études: {{student.school_year}}</p>
-        <a href="profile/edit"> Modifier mes données </a>
-        <a href="team/create"> Créer mon équipe </a>
+        <a href="profile/edit"> Modifier mes données </a> <br />
+        <a href="team/create"> Créer mon équipe </a> <br />
+        <a href="/profile"> Retour en arrière </a>
     {% endif %}    
 </body>

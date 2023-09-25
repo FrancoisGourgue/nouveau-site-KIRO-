@@ -1,37 +1,48 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
-    
+
+
 class User(AbstractUser):
     class Meta:
-        db_table="Users"
+        db_table = "Users"
+
     class Role(models.TextChoices):
-        TEACHER = "Professeur",
-        STUDENT = "Étudiant",
+        TEACHER = ("Professeur",)
+        STUDENT = ("Étudiant",)
+
     class Gender(models.TextChoices):
-        MALE = "Homme",
-        FEMALE = "Femme",
+        MALE = ("Homme",)
+        FEMALE = ("Femme",)
         OTHER = "Autre"
-        
+
     email = models.CharField(blank=False, max_length=255, unique=True)
     password = models.CharField(blank=False, max_length=255)
     first_name = models.CharField(blank=False, max_length=255)
-    last_name = models.CharField(blank = False, max_length=255)
-    role = models.CharField(max_length=255, choices = Role.choices, default=Role.STUDENT)
-    gender = models.CharField(max_length=255, choices = Gender.choices, default=Gender.OTHER)
+    last_name = models.CharField(blank=False, max_length=255)
+    role = models.CharField(max_length=255, choices=Role.choices, default=Role.STUDENT)
+    gender = models.CharField(
+        max_length=255, choices=Gender.choices, default=Gender.OTHER
+    )
     phone_number = models.TextField(max_length=12, default="0000000000")
+
 
 class Team(models.Model):
     class Type(models.TextChoices):
-        FIRST_YEAR = "1A Ponts",
-        KIRO = "Participant Kiro",
+        FIRST_YEAR = ("1A Ponts",)
+        KIRO = ("Participant Kiro",)
         RO = "Cours de RO"
+
     name = models.CharField(max_length=100, unique=True, blank=False, primary_key=True)
     type = models.CharField(max_length=100, choices=Type.choices, default=Type.KIRO)
     score = models.IntegerField(default=1000)
 
     def getMembers(self):
         members = Student.objects.get(team=self.name)
-        return members
+        return members.email
+
+    def __str__(self):
+        return self.name
+
 
 class Solution(models.Model):
     date = models.DateField()
@@ -41,18 +52,23 @@ class Solution(models.Model):
     score_3 = models.IntegerField()
     team = models.ForeignKey(Team, on_delete=models.PROTECT)
 
+
 class Student(User):
     class Meta:
-        db_table="Students"
+        db_table = "Students"
+
     team = models.ForeignKey(Team, on_delete=models.PROTECT, default=None, null=True)
     role = User.Role.STUDENT
     school = models.TextField(max_length=255)
     school_year = models.TextField(max_length=7, default="BAC+1")
 
+
 class Teacher(User):
     class Meta:
-        db_table="Teachers"
+        db_table = "Teachers"
+
     role = User.Role.TEACHER
+
 
 class Invitation(models.Model):
     team = models.ForeignKey(Team, on_delete=models.PROTECT)

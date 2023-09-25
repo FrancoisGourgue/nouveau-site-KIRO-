@@ -19,14 +19,17 @@ from django.contrib.auth import views as auth_view
 
 from back.views import (
     register_view,
-
 )
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('api-auth/', include('rest_framework.urls')),
-    path('', include('api.urls')),
-    path('profile/', include('profile.urls')),
-    path('login/', auth_view.LoginView.as_view(redirect_authenticated_user=True), name='login'),
-    path('register/', register_view, name='register'),
+    path("admin/", admin.site.urls),
+    path("api-auth/", include("rest_framework.urls")),
+    path("", include("api.urls")),
+    path("profile/", include("profile.urls")),
+    path(
+        "login/",
+        auth_view.LoginView.as_view(redirect_authenticated_user=True),
+        name="login",
+    ),
+    path("register/", register_view, name="register"),
 ]

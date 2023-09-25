@@ -8,13 +8,17 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import AuthenticationFailed
 from api.serializer import (
-    UserSerializer, TeamSerializer, StudentSerializer, TeacherSerializer
+    UserSerializer,
+    TeamSerializer,
+    StudentSerializer,
+    TeacherSerializer,
 )
 from api.models import User, Team, Student
 
 # Create your views here.
 
-@api_view(['GET'])
+
+@api_view(["GET"])
 def getRoutes(request):
     routes = [
         {
@@ -92,38 +96,41 @@ def getRoutes(request):
                 "team": "<team name>",
                 "student": "<student's email address>",
             },
-        }
+        },
     ]
     return Response(routes)
 
 
-@api_view(['POST'])
+@api_view(["POST"])
 def registerStudent(request):
     userSerializer = StudentSerializer(data=request.data)
     userSerializer.is_valid(raise_exception=True)
     userSerializer.save()
     return Response(userSerializer.data)
 
-@api_view(['POST'])
+
+@api_view(["POST"])
 def registerTeacher(request):
     user = TeacherSerializer(data=request.data)
     user.is_valid(raise_exception=True)
     user.save()
     return Response(user.data)
 
-@api_view(['GET'])
+
+@api_view(["GET"])
 def getUsers(request):
-    users = User.objects.all()[0]   
+    users = User.objects.all()[0]
     serializer = UserSerializer(users)
     return Response(serializer.data)
 
-@api_view(['POST'])
+
+@api_view(["POST"])
 def login(request):
-    mail = request.data['email']
-    password = request.data['password']
+    mail = request.data["email"]
+    password = request.data["password"]
 
     try:
-        user = User.objects.get(email = mail)
+        user = User.objects.get(email=mail)
     except ObjectDoesNotExist:
         raise AuthenticationFailed("User not found")
     if not user.check_password(password):
@@ -131,7 +138,7 @@ def login(request):
     payload = {
         "id": user.id,
         "exp": datetime.datetime.utcnow() + datetime.timedelta(120),
-        "iat": datetime.datetime.utcnow()
+        "iat": datetime.datetime.utcnow(),
     }
 
     token = jwt.encode(payload, "secret", algorithm="HS256")
@@ -140,7 +147,8 @@ def login(request):
     response.data = {"jwt": token}
     return response
 
-@api_view(['POST'])
+
+@api_view(["POST"])
 def registerTeam(request):
     team = TeamSerializer(data=request.data)
     team.is_valid(raise_exception=True)
@@ -148,21 +156,20 @@ def registerTeam(request):
     return Response(team.data)
 
 
-@api_view(['POST'])
+@api_view(["POST"])
 @permission_classes([IsAuthenticated])
 def addStudentToTeam(request):
     try:
-        team = Team.objects.get(name = request.data['team'])
+        team = Team.objects.get(name=request.data["team"])
     except ObjectDoesNotExist:
         raise AuthenticationFailed("Team not found")
     try:
-        user = Student.objects.get(email = request.data['student'])
+        user = Student.objects.get(email=request.data["student"])
     except ObjectDoesNotExist:
         raise AuthenticationFailed("User not found")
-    
+
     user.team = team
     user.save()
     response = Response()
     response.data = {"student": user.email, "team": team.name}
     return response
-    
