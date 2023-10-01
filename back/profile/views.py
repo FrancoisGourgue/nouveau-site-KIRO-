@@ -103,7 +103,7 @@ def team(request, team_id=None):
 @login_required
 def profile(request):
     email = request.user.email
-    student = get_object_or_404(Student, email=email)
+    student = get_object_or_404(User, email=email)
     context = {
         "student": student,
     }
@@ -167,3 +167,5 @@ def team(request):
                 "no_team": True,
             }
         return render(request, "profile/team.html", context)
+    else:
+        return render(request, "profile/team.html", context={"no_team": True})
