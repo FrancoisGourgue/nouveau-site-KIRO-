@@ -1,0 +1,13 @@
+{% load static %}
+<body>
+    {% if user %}
+        <p> Nom: {{user.last_name}}</p>
+        <p> Prénom: {{user.first_name}}</p>
+        <p> E-mail: {{user.email}}</p>
+        <p> Statut: {{user.role}}</p>
+        <p> Numéro de téléphone: {{user.phone_number}}</p>
+        <p> Genre: {{user.gender}}</p>
+        <a href="profile/edit"> Modifier mes données </a> <br />
+        <a href="/profile"> Retour en arrière </a>
+    {% endif %}    
+</body>

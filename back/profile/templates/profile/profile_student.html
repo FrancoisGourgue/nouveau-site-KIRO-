@@ -11,7 +11,9 @@
         <p> Ecole: {{student.school}}</p>
         <p> Année d'études: {{student.school_year}}</p>
         <a href="profile/edit"> Modifier mes données </a> <br />
-        <a href="team/create"> Créer mon équipe </a> <br />
+        {% if student.team == None %}
+            <a href="team/create"> Créer mon équipe </a> <br />
+        {% endif %}
         <a href="/profile"> Retour en arrière </a>
     {% endif %}    
 </body>

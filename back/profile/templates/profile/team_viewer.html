@@ -6,5 +6,10 @@
     <p> Nom: {{team}} </p>
     <p> Type: {{team.type}} </p>
     <p> Score: {{team.score}} </p>
-    <p> Membres: {{team.get_members}}</p>
+    {% if members %}
+        <p> Membres:</p>
+        {% for membre in members %}
+            <li>{{membre}}</li>
+        {% endfor %}
+    {% endif %}
 {% endif %}

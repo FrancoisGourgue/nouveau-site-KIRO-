@@ -24,6 +24,9 @@ class User(AbstractUser):
         max_length=255, choices=Gender.choices, default=Gender.OTHER
     )
     phone_number = models.TextField(max_length=12, default="0000000000")
+    
+    def __str__(self):
+        return self.first_name + " " + self.last_name
 
 
 class Team(models.Model):
@@ -35,10 +38,7 @@ class Team(models.Model):
     name = models.CharField(max_length=100, unique=True, blank=False, primary_key=True)
     type = models.CharField(max_length=100, choices=Type.choices, default=Type.KIRO)
     score = models.IntegerField(default=1000)
-
-    def getMembers(self):
-        members = Student.objects.get(team=self.name)
-        return members.email
+    """creator = models.CharField(blank=False, max_length=255, unique=True)"""
 
     def __str__(self):
         return self.name
@@ -57,7 +57,7 @@ class Student(User):
     class Meta:
         db_table = "Students"
 
-    team = models.ForeignKey(Team, on_delete=models.PROTECT, default=None, null=True)
+    team = models.ForeignKey(Team, on_delete=models.PROTECT, related_name='members', default=None, null=True)
     role = User.Role.STUDENT
     school = models.TextField(max_length=255)
     school_year = models.TextField(max_length=7, default="BAC+1")

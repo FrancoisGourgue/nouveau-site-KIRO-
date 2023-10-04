@@ -1,0 +1,16 @@
+{% if no_team %}
+    <p> Vous n'avez pas d'équipe.</p>
+    <a href="team/create"> Créer mon équipe </a>
+{% endif %}
+{% if team %}
+    <p> Nom: {{team}} </p>
+    <p> Type: {{team.type}} </p>
+    <p> Score: {{team.score}} </p>
+    {% if members %}
+        <p> Membres:</p>
+        {% for membre in members %}
+            <li>{{membre}}</li>
+        {% endfor %}
+    {% endif %}
+    <a href="team/create"> Quitter l'équipe </a>
+{% endif %}
