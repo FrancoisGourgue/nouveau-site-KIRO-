@@ -1,9 +1,9 @@
 import jwt
 import datetime
-
+import urllib
 
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, get_object_or_404, get_list_or_404, redirect
 from django.core.exceptions import ObjectDoesNotExist
 from django.urls import reverse
 from django.contrib import auth
@@ -71,6 +71,7 @@ def team_register(request):
         team = Team(
             name=name,
             type=request.POST["type"],
+            creator=student.email
         )
         team.save()
         student.team = team
@@ -90,24 +91,76 @@ def teams_list(request):
 
 
 @login_required
-def team(request, team_id=None):
-    if team_id == None:
-        team_id = request.user.team
-    team = get_object_or_404(Team, team__pk=team_id)
+def team_viewer(request, team_name):
+    print(team_name)
+    team_request = get_object_or_404(Team, name=team_name)
+    students = get_list_or_404(Student, team=team_request)  # à modifier: seul le premier student de la liste a les perms pour édit la team et non pas le créateur de la team
+    if team_request.creator == request.user.email:
+        return team_creator(request)
+    for student in students:
+        if request.user.email == student.email:
+            return team_member(request)
+    members = team_request.members.all()
     context = {
-        "team": team,
+        "team": team_request,
+        "members": members,
     }
-    return render(request, "team.html", context)
+    return render(request, "profile/team_viewer.html", context)
 
+
+@login_required
+def team_member(request):
+    # gérer si c'est un prof
+    if request.user.role == "Étudiant":
+        student = get_object_or_404(Student, email=request.user.email)
+        if student.team is not None:
+            team_request = get_object_or_404(Team, name=student.team.name)
+            members = team_request.members.all()
+            context = {
+                "team": team_request,
+                "members": members,
+            }
+        else:
+            context = {
+                "no_team": True,
+            }
+        return render(request, "profile/team.html", context)
+
+
+@login_required
+def team_creator(request):
+    # gérer si c'est un prof
+    if request.user.role == "Étudiant":
+        student = get_object_or_404(Student, email=request.user.email)
+        if student.team != None:
+            team_request = get_object_or_404(Team, name=student.team.name)
+            members = team_request.members.all()
+            context = {
+                "team": team_request,
+                "members": members,
+            }
+        else:
+            context = {
+                "no_team": True,
+            }
+        return render(request, "profile/team_creator.html", context)
+    
 
 @login_required
 def profile(request):
     email = request.user.email
-    student = get_object_or_404(User, email=email)
-    context = {
-        "student": student,
-    }
-    return render(request, "profile/profile.html", context)
+    try:
+        student = Student.objects.get(email=email)
+        context = {
+            "student": student,
+        }
+        return render(request, "profile/profile_student.html", context)
+    except Student.DoesNotExist:
+        user = User.objects.get(email=email)
+        context = {
+            "user": user,
+        }
+        return render(request, "profile/profile_user.html", context)
 
 
 @login_required
@@ -150,22 +203,3 @@ def profile_password(request):
         return redirect(reverse(profile))
     else:
         return render(request, "profile/password.html", context)
-
-
-@login_required
-def team(request):
-    # gérer si c'est un prof
-    if request.user.role == "Étudiant":
-        student = get_object_or_404(Student, email=request.user.email)
-        if student.team != None:
-            team_request = get_object_or_404(Team, name=student.team.name)
-            context = {
-                "team": team_request,
-            }
-        else:
-            context = {
-                "no_team": True,
-            }
-        return render(request, "profile/team.html", context)
-    else:
-        return render(request, "profile/team.html", context={"no_team": True})

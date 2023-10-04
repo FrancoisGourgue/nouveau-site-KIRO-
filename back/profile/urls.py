@@ -1,13 +1,14 @@
 from django.urls import path
 from .views import (
-    team,
     profile,
     profile_edit,
     profile_password,
     accueil,
     leaderboard,
     teams_list,
+    team_member,
     team_register,
+    team_viewer,
 )
 from api.views import (
     registerStudent,
@@ -22,8 +23,9 @@ general_endpoints = [
     path('subject', Subject),"""
 
 team_endpoints = [
-    path("team", team),
+    path("team", team_member),
     path("team/create", team_register),
+    path("team/<str:team_name>/", team_viewer)
 ]
 """
     path('team/edit', teamEdit),"""
