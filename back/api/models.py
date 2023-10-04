@@ -38,7 +38,7 @@ class Team(models.Model):
     name = models.CharField(max_length=100, unique=True, blank=False, primary_key=True)
     type = models.CharField(max_length=100, choices=Type.choices, default=Type.KIRO)
     score = models.IntegerField(default=1000)
-    """creator = models.CharField(blank=False, max_length=255, unique=True)"""
+    creator = models.CharField(blank=False, max_length=255, unique=True)
 
     def __str__(self):
         return self.name

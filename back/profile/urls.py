@@ -6,7 +6,7 @@ from .views import (
     accueil,
     leaderboard,
     teams_list,
-    team_member,
+    team,
     team_register,
     team_viewer,
 )
@@ -23,7 +23,7 @@ general_endpoints = [
     path('subject', Subject),"""
 
 team_endpoints = [
-    path("team", team_member),
+    path("team", team),
     path("team/create", team_register),
     path("team/<str:team_name>/", team_viewer)
 ]

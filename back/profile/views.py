@@ -28,7 +28,6 @@ def accueil(request):
         return render(request, "profile/accueil.html")
 
 
-@login_required
 def leaderboard(request):
     if request.method == "GET":
         return render(request, "profile/leaderboard.html")
@@ -81,7 +80,6 @@ def team_register(request):
         return render(request, "profile/team_register.html", context)
 
 
-@login_required
 def teams_list(request):
     teams = Team.objects.order_by("name")
     context = {
@@ -91,15 +89,33 @@ def teams_list(request):
 
 
 @login_required
+def team(request):
+    # renvoie l'user vers la page de son équipe ou de création d'équipe
+    email = request.user.email
+    try:
+        student = get_object_or_404(Student, email=email)
+        team_name = student.team
+        if student.team is not None:
+            return team_viewer(request, team_name)
+        else:
+            context = {
+                "no_team": True,
+            }
+            return render(request, "profile/team_member.html", context)
+    except Student.DoesNotExist:
+        # if user is teacher
+        pass
+
+
 def team_viewer(request, team_name):
-    print(team_name)
     team_request = get_object_or_404(Team, name=team_name)
     students = get_list_or_404(Student, team=team_request)  # à modifier: seul le premier student de la liste a les perms pour édit la team et non pas le créateur de la team
-    if team_request.creator == request.user.email:
-        return team_creator(request)
-    for student in students:
-        if request.user.email == student.email:
-            return team_member(request)
+    if request.user.is_authenticated:
+        if team_request.creator == request.user.email:
+            return team_creator(request)
+        for student in students:
+            if request.user.email == student.email:
+                return team_member(request)
     members = team_request.members.all()
     context = {
         "team": team_request,
@@ -110,40 +126,34 @@ def team_viewer(request, team_name):
 
 @login_required
 def team_member(request):
-    # gérer si c'est un prof
-    if request.user.role == "Étudiant":
+    try:
         student = get_object_or_404(Student, email=request.user.email)
-        if student.team is not None:
-            team_request = get_object_or_404(Team, name=student.team.name)
-            members = team_request.members.all()
-            context = {
-                "team": team_request,
-                "members": members,
-            }
-        else:
-            context = {
-                "no_team": True,
-            }
-        return render(request, "profile/team.html", context)
+        team_request = get_object_or_404(Team, name=student.team.name)
+        members = team_request.members.all()
+        context = {
+            "team": team_request,
+            "members": members,
+        }
+        return render(request, "profile/team_member.html", context)
+    except Student.DoesNotExist:
+        # if user is a teacher
+        pass
 
 
 @login_required
 def team_creator(request):
-    # gérer si c'est un prof
-    if request.user.role == "Étudiant":
+    try:
         student = get_object_or_404(Student, email=request.user.email)
-        if student.team != None:
-            team_request = get_object_or_404(Team, name=student.team.name)
-            members = team_request.members.all()
-            context = {
-                "team": team_request,
-                "members": members,
-            }
-        else:
-            context = {
-                "no_team": True,
-            }
+        team_request = get_object_or_404(Team, name=student.team.name)
+        members = team_request.members.all()
+        context = {
+            "team": team_request,
+            "members": members,
+        }
         return render(request, "profile/team_creator.html", context)
+    except Student.DoesNotExist:
+        # if user is a teacher
+        pass
     
 
 @login_required
