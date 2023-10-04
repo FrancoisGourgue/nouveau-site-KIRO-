@@ -1,0 +1,16 @@
+<h1> Modifier mon équipe </h1>
+<div>
+    <form method="post" action="edit">
+        {% csrf_token %}
+        {%if team_request %}
+            <input type="name" placeholder="Nom de l'équipe" value={{team.name}} name="name" required>
+            <select name="type" placeholder="Autre">
+                <option value="1A"> 1A </option>
+                <option value="Ponts"> Ponts </option>
+                <option value="Autre"> Autre </option>
+            </select>
+        {% endif %}
+        <button type="submit" name="Annuler"> Annuler </button> 
+        <button type="submit"> Valider </button>
+    </form>
+</div>

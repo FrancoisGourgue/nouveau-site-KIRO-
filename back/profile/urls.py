@@ -9,6 +9,7 @@ from .views import (
     team,
     team_register,
     team_viewer,
+    team_edit,
 )
 from api.views import (
     registerStudent,
@@ -25,10 +26,10 @@ general_endpoints = [
 team_endpoints = [
     path("team", team),
     path("team/create", team_register),
-    path("team/<str:team_name>/", team_viewer)
+    path("team/<str:team_name>/", team_viewer),
+    path('team/edit', team_edit),
 ]
-"""
-    path('team/edit', teamEdit),"""
+
 
 personal_endpoints = [
     path("student/register", registerStudent),

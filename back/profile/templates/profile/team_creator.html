@@ -12,6 +12,9 @@
             <li>{{membre}}</li>
         {% endfor %}
     {% endif %}
-    <a href="team/create"> Modifier l'équipe </a>
-    <a href="team/create"> Quitter l'équipe </a>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" name="edit_team"> Modifier l'équipe </button> 
+        <button type="submit" name="leave_team"> Quitter l'équipe </button> 
+    </form>
 {% endif %}

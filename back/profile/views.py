@@ -1,26 +1,10 @@
-import jwt
-import datetime
-import urllib
-
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, get_list_or_404, redirect
-from django.core.exceptions import ObjectDoesNotExist
 from django.urls import reverse
 from django.contrib import auth
 from django.contrib.auth import update_session_auth_hash
-from rest_framework.response import Response
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.exceptions import AuthenticationFailed
-from api.serializer import (
-    UserSerializer,
-    TeamSerializer,
-    StudentSerializer,
-    TeacherSerializer,
-)
-from api.models import User, Team, Student
 
-# Create your views here.
+from api.models import User, Team, Student
 
 
 def accueil(request):
@@ -134,6 +118,11 @@ def team_member(request):
             "team": team_request,
             "members": members,
         }
+        if request.method == "POST":
+            if "leave_team" in request.POST:
+                student.team = None
+                student.save()
+            return redirect(accueil)
         return render(request, "profile/team_member.html", context)
     except Student.DoesNotExist:
         # if user is a teacher
@@ -150,6 +139,14 @@ def team_creator(request):
             "team": team_request,
             "members": members,
         }
+        if request.method == "POST":
+            if "edit_team" in request.POST:
+                return render(request, "profile/team_edit.html", context)
+            if "leave_team" in request.POST:
+                # à modifier pour que la team disparaisse si vide ou que le rôle de créateur soit légué
+                student.team = None
+                student.save()
+                return redirect(accueil)
         return render(request, "profile/team_creator.html", context)
     except Student.DoesNotExist:
         # if user is a teacher

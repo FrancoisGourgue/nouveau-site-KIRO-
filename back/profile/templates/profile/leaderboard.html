@@ -1,1 +1,6 @@
 <h1> Classement général </h1>
+{% if teams %}
+    {% for team in teams %}
+        <p> Equipe: {{team.name}}  Score: {{team.score}}</p>
+    {% endfor %}
+{% endif %}
