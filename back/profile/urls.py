@@ -9,7 +9,8 @@ from .views import (
     team,
     team_register,
     team_viewer,
-    team_edit,
+    invitation,
+    # team_edit
 )
 from api.views import (
     registerStudent,
@@ -27,7 +28,7 @@ team_endpoints = [
     path("team", team),
     path("team/create", team_register),
     path("team/<str:team_name>/", team_viewer),
-    path('team/edit', team_edit),
+    # path("team/edit", team_edit),
 ]
 
 
@@ -37,6 +38,11 @@ personal_endpoints = [
     path("profile/edit", profile_edit),
     path("profile/edit/password", profile_password),
 ]
-"""path('student/login', loginStudent),"""
+"""path("student/login", loginStudent),"""
 
-urlpatterns = general_endpoints + team_endpoints + personal_endpoints
+
+invitations = [
+    path("invite/<str:invite_uuid>", invitation),
+]
+
+urlpatterns = general_endpoints + team_endpoints + personal_endpoints + invitations

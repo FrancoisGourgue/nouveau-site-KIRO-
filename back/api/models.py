@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
-
+import uuid
 
 class User(AbstractUser):
     class Meta:
@@ -39,6 +39,7 @@ class Team(models.Model):
     type = models.CharField(max_length=100, choices=Type.choices, default=Type.KIRO)
     score = models.IntegerField(default=1000)
     creator = models.CharField(blank=False, max_length=255, unique=True)
+    invitation_code = models.UUIDField(default=uuid.uuid4, unique=True)
 
     def __str__(self):
         return self.name

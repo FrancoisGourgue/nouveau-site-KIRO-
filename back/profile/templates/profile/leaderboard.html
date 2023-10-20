@@ -1,6 +1,14 @@
 <h1> Classement général </h1>
-{% if teams %}
-    {% for team in teams %}
-        <p> Equipe: {{team.name}}  Score: {{team.score}}</p>
+{% if teams_list %}
+    <table width="100%" border="1" cellspacing="1" cellpading="5">
+        <tr>
+            <th> Nom </th>
+            <th> Score </th>
+        </tr>
+    {% for team in teams_list %}
+        <tr>
+            <td> <a href="/profile/team/{{ team.name }}/">{{ team.name }}</a> </td>
+            <td> {{team.score}} </td>
+        </tr>
     {% endfor %}
 {% endif %}

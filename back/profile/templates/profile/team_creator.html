@@ -17,4 +17,6 @@
         <button type="submit" name="edit_team"> Modifier l'équipe </button> 
         <button type="submit" name="leave_team"> Quitter l'équipe </button> 
     </form>
+    <p> Pour inviter des gens, utilisez le lien suivant: </p>
+    <p> <a href="http://localhost:8000/profile/invite/{{team.invitation_code}}"> http://localhost:8000/profile/invite/{{team.invitation_code}} </a> </p>
 {% endif %}

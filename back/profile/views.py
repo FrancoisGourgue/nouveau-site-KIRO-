@@ -14,7 +14,8 @@ def accueil(request):
 
 def leaderboard(request):
     if request.method == "GET":
-        return render(request, "profile/leaderboard.html")
+        context = {"teams_list": Team.objects.all().order_by("-score")}
+        return render(request, "profile/leaderboard.html", context)
 
 
 def register_view(request):
@@ -108,6 +109,22 @@ def team_viewer(request, team_name):
     return render(request, "profile/team_viewer.html", context)
 
 
+def invitation(request, invite_uuid):
+    if request.user.is_authenticated:
+        student = get_object_or_404(Student, email=request.user.email)
+        team = get_object_or_404(Team, invitation_code=invite_uuid)
+        team_members = get_list_or_404(Student, team=team)
+        if len(team_members) > 2:
+            return render(request, "profile/invite_error.html")
+        student.team = team
+        student.save()
+        return render(request, "profile/invite_success.html")
+    else:
+        # renvoyer vers page de connexion
+        pass
+
+
+
 @login_required
 def team_member(request):
     try:
@@ -172,19 +189,21 @@ def profile(request):
 
 @login_required
 def profile_edit(request):
-    email = request.user.email
-    student = get_object_or_404(User, email=email)
+    student = request.user
     context = {"student": student}
     if request.method == "POST":
         if "Annuler" in request.POST:
             return redirect(reverse(profile))
-        student.first_name = request.POST["first_name"]
-        student.last_name = request.POST["last_name"]
-        student.phone_number = request.POST["phone_number"]
-        student.email = request.POST["email"]
+        print(request.POST)
+        student.first_name = request.POST.get("first_name")
+        student.last_name = request.POST.get("last_name")
+        student.phone_number = request.POST.get("phone_number")
+        student.email = request.POST.get("email")
         student.save()
         return redirect(reverse(profile))
     else:
+        print("eee")
+        print("|" + student.last_name + "|")
         return render(request, "profile/profile_edit.html", context)
 
 

@@ -2,7 +2,7 @@
 <div>
     <form method="post" action="edit">
         {% csrf_token %}
-        {%if team_request %}
+        {%if team %}
             <input type="name" placeholder="Nom de l'équipe" value={{team.name}} name="name" required>
             <select name="type" placeholder="Autre">
                 <option value="1A"> 1A </option>
